@@ -2,27 +2,22 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
-    protected $primaryKey = 'task_id'; // 🔹 pakai custom PK
-    protected $fillable = [
-        'title',
-        'description',
-        'status',
-        'project_id',
-        'assigned_to'
-    ];
+    use HasFactory;
 
-    // Relasi ke Project
+    protected $primaryKey = 'task_id';
+    protected $fillable = ['title', 'description', 'status', 'project_id', 'assigned_to'];
+
     public function project()
     {
         return $this->belongsTo(Project::class, 'project_id', 'project_id');
     }
 
-    // Relasi ke User
-    public function user()
+    public function assignedUser()
     {
         return $this->belongsTo(User::class, 'assigned_to', 'id');
     }

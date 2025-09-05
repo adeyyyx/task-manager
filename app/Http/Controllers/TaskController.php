@@ -22,29 +22,30 @@ class TaskController extends Controller
     public function create()
     {
         $projects = Project::all();
-        $users = User::all();
+        $users = User::all(); // semua user bisa dipilih
         return view('tasks.create', compact('projects', 'users'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'project_id' => 'required|exists:projects,project_id', // ✅ sesuaikan PK project
-            'assigned_to' => 'required|exists:users,id',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'project_id' => 'required|exists:projects,project_id',
+            'assigned_to' => 'required|exists:users,id',
         ]);
 
         Task::create([
-            'project_id' => $request->project_id,
-            'assigned_to' => $request->assigned_to,
             'title' => $request->title,
             'description' => $request->description,
             'status' => 'pending',
+            'project_id' => $request->project_id,
+            'assigned_to' => $request->assigned_to,
         ]);
 
-        return redirect()->route('admin.tasks.index')->with('success', 'Tugas berhasil dibuat.');
+        return redirect()->route('tasks.index')->with('success', 'Tugas berhasil dibuat.');
     }
+
 
     public function edit(Task $task)
     {
@@ -64,13 +65,13 @@ class TaskController extends Controller
 
         $task->update($request->only('project_id', 'assigned_to', 'title', 'description'));
 
-        return redirect()->route('admin.tasks.index')->with('success', 'Tugas berhasil diperbarui.');
+        return redirect()->route('tasks.index')->with('success', 'Tugas berhasil diperbarui.');
     }
 
     public function destroy(Task $task)
     {
         $task->delete();
-        return redirect()->route('admin.tasks.index')->with('success', 'Tugas berhasil dihapus.');
+        return redirect()->route('tasks.index')->with('success', 'Tugas berhasil dihapus.');
     }
 
     // =============================
@@ -80,7 +81,7 @@ class TaskController extends Controller
     public function myTasks()
     {
         $tasks = Task::with('project')
-            ->where('assigned_to', auth()->id()) // ✅ pakai assigned_to
+            ->where('assigned_to', auth()->id())
             ->latest()
             ->get();
 
@@ -107,7 +108,7 @@ class TaskController extends Controller
     {
         $this->authorizeUser($task);
 
-        $task->update(['status' => 'on_progress']);
+        $task->update(['status' => 'on_progress']); // ✅ disesuaikan dengan migration
         return back()->with('success', 'Tugas sedang dikerjakan.');
     }
 
@@ -124,7 +125,7 @@ class TaskController extends Controller
     // =============================
     private function authorizeUser(Task $task)
     {
-        if ($task->assigned_to !== auth()->id()) { // ✅ pakai assigned_to
+        if ($task->assigned_to !== auth()->id()) {
             abort(403, 'Unauthorized action.');
         }
     }
