@@ -33,15 +33,15 @@
                     </span>
 
                     <!-- Aksi -->
-                    <div class="mt-4 space-x-2">
+                    <div class="mt-4 flex gap-2">
                         @if($task->status === 'pending')
                             <form action="{{ route('tasks.accept', $task->task_id) }}" method="POST" class="inline">
                                 @csrf @method('PATCH')
-                                <button class="px-3 py-1 bg-green-500 text-white rounded text-sm">Accept</button>
+                                <button class="bg-green-500 text-white px-3 py-1 rounded shadow transition-all duration-200 hover:bg-green-600 hover:scale-105">Accept</button>
                             </form>
                             <form action="{{ route('tasks.reject', $task->task_id) }}" method="POST" class="inline">
                                 @csrf @method('PATCH')
-                                <button class="px-3 py-1 bg-red-500 text-white rounded text-sm">Reject</button>
+                                <button class="bg-red-500 text-white px-3 py-1 rounded shadow transition-transform duration-200 hover:scale-105 hover:bg-red-600 flex items-center gap-1">Reject</button>
                             </form>
                         @elseif($task->status === 'accepted')
                             <form action="{{ route('tasks.progress', $task->task_id) }}" method="POST" class="inline">
