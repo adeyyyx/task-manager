@@ -12,7 +12,7 @@
     <nav class="space-y-3">
         @if(auth()->check())
             @if(auth()->user()->role === 'admin')
-                <a href="{{ route('users.index') }}"
+                {{-- <a href="{{ route('users.index') }}"
                    class="flex items-center px-4 py-2 rounded-lg transition hover:bg-blue-500">
                     <svg xmlns="http://www.w3.org/2000/svg"
                          class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -20,7 +20,7 @@
                             d="M17 20h5v-2a4 4 0 00-4-4h-1m-6 6H7a4 4 0 01-4-4v-1h6v5zm0-10V4a4 4 0 114 4v2h-4z" />
                     </svg>
                     Kelola User
-                </a>
+                </a> --}}
 
                 <a href="{{ route('projects.index') }}"
                    class="flex items-center px-4 py-2 rounded-lg transition hover:bg-blue-500">
