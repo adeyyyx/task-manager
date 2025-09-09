@@ -4,63 +4,60 @@
 <div class="p-6">
     <h1 class="text-xl font-bold mb-4">Tugas Saya</h1>
 
-    {{-- Notifikasi sukses --}}
     @if(session('success'))
         <div class="bg-green-100 text-green-700 p-2 rounded mb-4">
             {{ session('success') }}
         </div>
     @endif
 
-    {{-- Debug: cek isi data --}}
-    {{-- <pre>{{ $tasks }}</pre> --}}
+    @if($tasks->isEmpty())
+        <div class="p-4 text-center bg-gray-100 rounded">
+            Tidak ada tugas
+        </div>
+    @else
+        <!-- Grid Card -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            @foreach($tasks as $task)
+                <div class="bg-white shadow rounded-lg p-4 border">
+                    <h2 class="text-lg font-semibold">{{ $task->title }}</h2>
+                    <p class="text-sm text-gray-600 mb-2">{{ $task->project->name }}</p>
+                    <p class="text-gray-700 mb-4">{{ $task->description }}</p>
 
-    <table class="w-full border border-gray-300">
-        <thead>
-            <tr class="bg-gray-200">
-                <th class="p-2 border">Project</th>
-                <th class="p-2 border">Judul</th>
-                <th class="p-2 border">Deskripsi</th>
-                <th class="p-2 border">Status</th>
-                <th class="p-2 border">Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($tasks as $task)
-                <tr>
-                    {{-- gunakan safe navigation untuk menghindari error --}}
-                    <td class="p-2 border">{{ $task->project?->name ?? '-' }}</td>
-                    <td class="p-2 border">{{ $task->title }}</td>
-                    <td class="p-2 border">{{ $task->description ?? '-' }}</td>
-                    <td class="p-2 border">{{ ucfirst(str_replace('_', ' ', $task->status)) }}</td>
-                    <td class="p-2 border space-x-1">
+                    <span class="inline-block px-2 py-1 text-xs rounded
+                        @if($task->status === 'pending') bg-gray-200 text-gray-800
+                        @elseif($task->status === 'accepted') bg-green-200 text-green-800
+                        @elseif($task->status === 'on_progress') bg-yellow-200 text-yellow-800
+                        @elseif($task->status === 'done') bg-blue-200 text-blue-800
+                        @else bg-red-200 text-red-800 @endif">
+                        {{ ucfirst(str_replace('_', ' ', $task->status)) }}
+                    </span>
+
+                    <!-- Aksi -->
+                    <div class="mt-4 space-x-2">
                         @if($task->status === 'pending')
                             <form action="{{ route('tasks.accept', $task->task_id) }}" method="POST" class="inline">
                                 @csrf @method('PATCH')
-                                <button class="px-2 py-1 bg-green-500 text-white rounded">Accept</button>
+                                <button class="px-3 py-1 bg-green-500 text-white rounded text-sm">Accept</button>
                             </form>
                             <form action="{{ route('tasks.reject', $task->task_id) }}" method="POST" class="inline">
                                 @csrf @method('PATCH')
-                                <button class="px-2 py-1 bg-red-500 text-white rounded">Reject</button>
+                                <button class="px-3 py-1 bg-red-500 text-white rounded text-sm">Reject</button>
                             </form>
                         @elseif($task->status === 'accepted')
                             <form action="{{ route('tasks.progress', $task->task_id) }}" method="POST" class="inline">
                                 @csrf @method('PATCH')
-                                <button class="px-2 py-1 bg-yellow-500 text-white rounded">On Progress</button>
+                                <button class="px-3 py-1 bg-yellow-500 text-white rounded text-sm">On Progress</button>
                             </form>
                         @elseif($task->status === 'on_progress')
                             <form action="{{ route('tasks.done', $task->task_id) }}" method="POST" class="inline">
                                 @csrf @method('PATCH')
-                                <button class="px-2 py-1 bg-blue-500 text-white rounded">Selesai</button>
+                                <button class="px-3 py-1 bg-blue-500 text-white rounded text-sm">Selesai</button>
                             </form>
                         @endif
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="5" class="p-4 text-center">Tidak ada tugas</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    @endif
 </div>
 @endsection
