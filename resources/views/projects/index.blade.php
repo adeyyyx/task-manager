@@ -3,7 +3,7 @@
 @section('title', 'Kelola Project')
 
 @section('content')
-<a href="{{ route('projects.create') }}" class="bg-green-500 text-white px-3 py-1 rounded shadow hover:bg-green-600 transition">Tambah Project</a>
+<a href="{{ route('projects.create') }}" class="bg-green-500 text-white px-3 py-1 rounded shadow transition-all duration-200 hover:bg-green-600 hover:scale-105 ">Tambah Project</a>
 
 <div class="overflow-x-auto mt-4">
     <table class="min-w-full bg-white rounded-lg shadow">
@@ -23,7 +23,7 @@
                 <td class="px-6 py-3">{{ $project->creator->name ?? '-' }}</td>
                 <td class="px-6 py-3 flex justify-center items-center gap-2">
                     <a href="{{ route('projects.edit',$project) }}"
-                       class="bg-yellow-500 text-white px-3 py-1 rounded shadow hover:bg-yellow-600 transition flex items-center gap-1">
+                        class="bg-yellow-500 text-white px-3 py-1 rounded shadow transition-all duration-200 hover:bg-yellow-600 hover:scale-105 flex items-center gap-1">
                         <!-- Icon Edit -->
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M9 13l6-6m2 2l-6 6m2 2H7v-4h4z" />
